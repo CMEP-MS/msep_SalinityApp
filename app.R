@@ -5,6 +5,9 @@ library(mseptools)
 library(plotly)
 library(leaflet)
 
+# github repo:
+# https://github.com/CMEP-MS/msep_SalinityApp
+
 ui <- page_sidebar(
     title = "Mississippi Sound Salinity Explorer",
     sidebar = sidebar(
@@ -30,22 +33,13 @@ ui <- page_sidebar(
         # Horizontal rule for separation
         hr(),
 
-        leafletOutput("map"),
+        leafletOutput("map")
 
-        # Download button
-        downloadButton(
-            "download_data",
-            "Download Data",
-            class = "btn-success",
-            width = "100%"
-        )
     ),
 
     # Main panel with map and plot in stacked layout
     card(plotlyOutput("plot"),
          full_screen = TRUE)
-
-
 
 
 )
@@ -87,6 +81,11 @@ server <- function(input, output, session) {
     })
 
     output$plot <- renderPlotly({
+        validate(
+            need(input$get_data,
+                 "Select a date range and push 'Get Data' in the left sidebar to see graphs here.")
+        )
+
         plot_mssnd_salinity(data = data())
     })
 
