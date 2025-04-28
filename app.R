@@ -56,8 +56,10 @@ server <- function(input, output, session) {
 
     stns <- reactive({
         req(data())
-        st <- sort(unique(data()$siteInfo$clean_nm))
-        st <- factor(st, levels = st)
+        df <- data()$siteInfo |>
+            dplyr::arrange(dec_lon_va) |>
+            dplyr::mutate(clean_nm = forcats::fct_inorder(clean_nm))
+        df$clean_nm
     })
 
     # color palette -
@@ -86,7 +88,8 @@ server <- function(input, output, session) {
                  "Select a date range and push 'Get Data' in the left sidebar to see graphs here.")
         )
 
-        plot_mssnd_salinity(data = data())
+        plot_mssnd_salinity(data = data(),
+                            colors = colors_static())
     })
 
 }
