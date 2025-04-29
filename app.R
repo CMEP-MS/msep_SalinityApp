@@ -1,5 +1,6 @@
 library(shiny)
 library(shinyWidgets)
+library(shinybusy)
 library(bslib)
 library(mseptools)
 library(plotly)
@@ -38,7 +39,11 @@ ui <- page_sidebar(
     ),
 
     # Main panel with map and plot in stacked layout
-    card(plotlyOutput("plot"),
+    card(add_busy_spinner(spin = "circle",
+                          height = "100px",
+                          width = "100px",
+                          margins = c(20, 40)),
+         plotlyOutput("plot"),
          full_screen = TRUE)
 
 
