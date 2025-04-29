@@ -10,7 +10,20 @@ library(leaflet)
 # https://github.com/CMEP-MS/msep_SalinityApp
 
 ui <- page_sidebar(
-    title = "Mississippi Sound Salinity Explorer",
+
+    title = div(
+        style = "display: flex; justify-content: space-between; align-items: center; width: 100%;
+        background-color: #18a4ad; color: white; border-color: #0d80a4;
+        padding: 18px 18px; margin: -16px -16px -16px -16px;",
+        span("Mississippi Sound Salinity Explorer"),
+        a(
+            href = "https://github.com/CMEP-MS/msep_SalinityApp",
+            target = "_blank",
+            icon("github", "fa-xl"),
+            style = "color: inherit; text-decoration: none;"
+        )
+    ),
+
     sidebar = sidebar(
         width = "40%",
 
@@ -27,8 +40,8 @@ ui <- page_sidebar(
         actionButton(
             "get_data",
             "Get Data",
-            class = "btn-primary",
-            width = "100%"
+            style = "background-color: #18a4ad; color: white; border-color: #0d80a4; width: 75%;",
+            class = "btn"
         ),
 
         # Horizontal rule for separation
