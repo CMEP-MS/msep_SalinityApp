@@ -28,11 +28,20 @@ ui <- page_sidebar(
         width = "40%",
 
         # Date selection inputs
-        airDatepickerInput(
+        # airDatepickerInput(
+        #     inputId = "date_range",
+        #     label = "Select Date Range",
+        #     value = c(Sys.Date() - 30, Sys.Date()),
+        #     range = TRUE,
+        #     width = "100%",
+        #     readonly = FALSE
+        # ),
+
+        dateRangeInput(
             inputId = "date_range",
             label = "Select Date Range",
-            value = c(Sys.Date() - 30, Sys.Date()),
-            range = TRUE,
+            start = Sys.Date() - 30,
+            end = Sys.Date(),
             width = "100%"
         ),
 
@@ -150,8 +159,8 @@ server <- function(input, output, session) {
         map_mssnd_salinity(tomap())
     })
 
-    # observer to update date slider
-    observeEvent(input$date_range, {
+    # observer to update date slider when the get data button is clicked
+    observeEvent(input$get_data, {
       updateSliderInput(
         session,
         "date_slider",
