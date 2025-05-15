@@ -51,14 +51,41 @@ ui <- page_sidebar(
 
     ),
 
-    # Main panel with map and plot in stacked layout
-    card(add_busy_spinner(spin = "circle",
-                          height = "100px",
-                          width = "100px",
-                          margins = c(20, 40)),
-         plotlyOutput("plot"),
-         full_screen = TRUE)
+    # Main panel with tabs for plot and map options
+    card(
+        navset_card_tab(
+            id = "main_tabs",
+            # title = "Data Visualization",
+            nav_panel(
+                title = "Time Series",
+                add_busy_spinner(
+                    spin = "circle",
+                    height = "100px",
+                    width = "100px",
+                    margins = c(20, 40)
+                ),
+                plotlyOutput("plot")
+            ),
+            nav_panel(
+                title = "Map",
+                # date selection slider
+                sliderInput(
+                    inputId = "date_slider",
+                    label = "Map Daily Means",
+                    min = as.Date(Sys.Date() - 30),
+                    max = as.Date(Sys.Date()),
+                    value = as.Date(Sys.Date() - 15),
+                    step = 1,
+                    animate = TRUE,
+                    timeFormat = "%Y-%m-%d"
+                ),
 
+                # map
+                leafletOutput("salinity_map")
+            )
+        ),
+        full_screen = TRUE
+    )
 
 )
 
@@ -108,6 +135,31 @@ server <- function(input, output, session) {
 
         plot_mssnd_salinity(data = data(),
                             colors = colors_static())
+    })
+
+    # filter by chosen date
+    tomap <- reactive({
+        req(input$date_slider, data())
+        dplyr::left_join(data()$daily, data()$siteInfo) |>
+            dplyr::filter(date == as.Date(input$date_slider))
+
+    })
+
+    # map salinity values
+    output$salinity_map <- renderLeaflet({
+        map_mssnd_salinity(tomap())
+    })
+
+    # observer to update date slider
+    observeEvent(input$date_range, {
+      updateSliderInput(
+        session,
+        "date_slider",
+        min = input$date_range[1],
+        max = input$date_range[2],
+        value = input$date_range[1]
+      )
+
     })
 
 }
