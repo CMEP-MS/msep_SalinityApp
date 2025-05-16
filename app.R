@@ -154,20 +154,43 @@ server <- function(input, output, session) {
 
     })
 
-    # map salinity values
+    # Create the base map only once, including the static legend
     output$salinity_map <- renderLeaflet({
-        map_mssnd_salinity(tomap())
+        create_mssnd_basemap() |>
+            add_salinity_legend()
     })
 
-    # observer to update date slider when the get data button is clicked
+    # Observer to update only points when date changes
+    observe({
+        filtered_data <- tomap()
+
+        # Update the markers
+        leafletProxy("salinity_map") |>
+            clearMarkers() |>
+            add_salinity_points(data = filtered_data)
+    })
+
+    # observer to update date slider and make an initial map
+    # when the get data button is clicked
     observeEvent(input$get_data, {
-      updateSliderInput(
-        session,
-        "date_slider",
-        min = input$date_range[1],
-        max = input$date_range[2],
-        value = input$date_range[1]
-      )
+
+        # update the slider
+        updateSliderInput(
+            session,
+            "date_slider",
+            min = input$date_range[1],
+            max = input$date_range[2],
+            value = input$date_range[1]
+        )
+
+        # trigger a map update
+        req(data())
+        initial_data <- dplyr::left_join(data()$daily, data()$siteInfo) |>
+            dplyr::filter(date == as.Date(input$date_range[1]))  # Use the first date
+
+        leafletProxy("salinity_map") |>
+            clearMarkers() |>
+            add_salinity_points(data = initial_data)
 
     })
 
