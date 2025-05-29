@@ -9,93 +9,94 @@ library(leaflet)
 # github repo:
 # https://github.com/CMEP-MS/msep_SalinityApp
 
-ui <- page_sidebar(
+ui <- page_navbar(
 
-    title = div(
-        style = "display: flex; justify-content: space-between; align-items: center; width: 100%;
-        background-color: #18a4ad; color: white; border-color: #0d80a4;
-        padding: 18px 18px; margin: -16px -16px -16px -16px;",
-        span("Mississippi Sound Salinity Explorer"),
-        a(
-            href = "https://github.com/CMEP-MS/msep_SalinityApp",
-            target = "_blank",
-            icon("github", "fa-xl"),
-            style = "color: inherit; text-decoration: none;"
-        )
-    ),
+    title = "Mississippi Sound Salinity Explorer",
+    theme = bs_theme(version = 5),
+    navbar_options = list(bg = "#18a4ad",
+                          underline = TRUE),
 
-    sidebar = sidebar(
-        width = "40%",
 
-        # Date selection inputs
-        # airDatepickerInput(
-        #     inputId = "date_range",
-        #     label = "Select Date Range",
-        #     value = c(Sys.Date() - 30, Sys.Date()),
-        #     range = TRUE,
-        #     width = "100%",
-        #     readonly = FALSE
-        # ),
+    nav_panel("Salinity",
 
-        dateRangeInput(
-            inputId = "date_range",
-            label = "Select Date Range",
-            start = Sys.Date() - 30,
-            end = Sys.Date(),
-            width = "100%"
-        ),
+              # main panel
+              page_sidebar(
 
-        # Action button to fetch data
-        actionButton(
-            "get_data",
-            "Get Data",
-            style = "background-color: #18a4ad; color: white; border-color: #0d80a4; width: 75%;",
-            class = "btn"
-        ),
+                  # sidebar
+                  sidebar = sidebar(
+                      width = "40%",
 
-        # Horizontal rule for separation
-        hr(),
+                      dateRangeInput(
+                          inputId = "date_range",
+                          label = "Select Date Range",
+                          start = Sys.Date() - 30,
+                          end = Sys.Date(),
+                          width = "100%"
+                      ),
 
-        leafletOutput("map")
+                      # Action button to fetch data
+                      actionButton(
+                          "get_data",
+                          "Get Data",
+                          style = "background-color: #18a4ad; color: white; border-color: #0d80a4; width: 75%;",
+                          class = "btn"
+                      ),
 
-    ),
+                      # Horizontal rule for separation
+                      hr(),
 
-    # Main panel with tabs for plot and map options
-    card(
-        navset_card_tab(
-            id = "main_tabs",
-            # title = "Data Visualization",
-            nav_panel(
-                title = "Time Series",
-                add_busy_spinner(
-                    spin = "circle",
-                    height = "100px",
-                    width = "100px",
-                    margins = c(20, 40)
-                ),
-                plotlyOutput("plot")
-            ),
-            nav_panel(
-                title = "Map",
-                # date selection slider
-                sliderInput(
-                    inputId = "date_slider",
-                    label = "Map Daily Means",
-                    min = as.Date(Sys.Date() - 30),
-                    max = as.Date(Sys.Date()),
-                    value = as.Date(Sys.Date() - 15),
-                    step = 1,
-                    animate = TRUE,
-                    timeFormat = "%Y-%m-%d"
-                ),
+                      leafletOutput("map")
 
-                # map
-                leafletOutput("salinity_map")
-            )
-        ),
-        full_screen = TRUE
+                  ), # end sidebar
+
+
+                  # main tabs
+                  navset_card_tab(
+                      id = "main_tabs",
+                      # title = "Data Visualization",
+                      nav_panel(
+                          title = "Time Series",
+                          add_busy_spinner(
+                              spin = "circle",
+                              height = "100px",
+                              width = "100px",
+                              margins = c(20, 40)
+                          ),
+                          plotlyOutput("plot")
+                      ),
+                      nav_panel(
+                          title = "Map",
+                          # date selection slider
+                          sliderInput(
+                              inputId = "date_slider",
+                              label = "Map Daily Means",
+                              min = as.Date(Sys.Date() - 30),
+                              max = as.Date(Sys.Date()),
+                              value = as.Date(Sys.Date() - 15),
+                              step = 1,
+                              animate = TRUE,
+                              timeFormat = "%Y-%m-%d"
+                          ),
+
+                          # map
+                          leafletOutput("salinity_map")
+                      )
+                  ),
+                  full_screen = TRUE
+              )
+
+    ), # end salinity panel
+
+    # about panel
+    nav_panel("About",
+              card("To be filled in")
+    ), # end About panel
+
+    nav_spacer(),
+    nav_item(tags$a(shiny::icon("github"),
+                    href = "https://github.com/CMEP-MS/msep_SalinityApp",
+                    target = "_blank")
     )
-
 )
 
 server <- function(input, output, session) {
