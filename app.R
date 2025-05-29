@@ -157,7 +157,14 @@ server <- function(input, output, session) {
 
     # Create the base map only once, including the static legend
     output$salinity_map <- renderLeaflet({
+
+        # create the map with the first date's data
+        req(data())
+        first_day <- dplyr::left_join(data()$daily, data()$siteInfo) |>
+            dplyr::filter(date == min(data()$daily$date, na.rm = TRUE))
+
         create_mssnd_basemap() |>
+            add_salinity_points(data = first_day) |>
             add_salinity_legend()
     })
 
