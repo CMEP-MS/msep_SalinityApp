@@ -89,7 +89,46 @@ ui <- page_navbar(
 
     # about panel
     nav_panel("About",
-              card("To be filled in")
+              card(
+                  card_header("About this app"),
+                  p("This application allows users to explore salinity data in the Mississippi Sound."),
+                  p("Most pieces of this app are interactive."),
+                  h4("Data sources and caveats:"),
+                  tags$ol(
+                      tags$li(span(strong("USGS Salinity data"), "is downloaded from the USGS web API using the `dataRetrieval` R package."),
+                              tags$ol(
+                                  style = "list-style-type: lower-alpha; margin-top: 8px;",
+                                  tags$li(em(strong("Data preview:")), " some words"),
+                                  tags$li(em(strong("Column summary:")), " some more words")
+                              ))
+                  ),
+                  h4("How to use this app:"),
+                  tags$ol(
+                      tags$li(strong("Upload your vegetation data file"), "using the sidebar. This information will not be retained by the app once you close the session."),
+                      tags$li(
+                          span(strong("See tabular summaries"), " of your data by selecting 'Tables' from the navigation bar at the top of the app."),
+                          tags$ol(
+                              style = "list-style-type: lower-alpha; margin-top: 8px;",
+                              tags$li(em(strong("Data preview:")), " some more words"),
+                              tags$li(em(strong("Column summary:")), " some more words"),
+                              tags$li(em(strong("Sampling summary:")), " some more words")
+                          )
+                      ),
+                      tags$li(
+                          span(strong("Explore graphs"), " of your data by selecting 'Graphs' from the navigation bar at the top of the app."),
+                          tags$ol(
+                              style = "list-style-type: lower-alpha; margin-top: 8px;",
+                              tags$li(em(strong("Time series:")), " some more words"),
+                              tags$li(em(strong("Transect Profiles:")), " some more words"),
+                              tags$li(em(strong("Correlation Scatterplots:")), " some more words")
+                          )
+                      )
+
+                  ),
+                  hr(),
+                  p("This app was developed in support of the Mississippi Sound Estuary Program (MSEP). Please see ", tags$a("our website", href = "https://msucoastal.com/mssoundep/", target = "_blank"), " for more information."),
+                  p("For questions about this app, please contact ", tags$a("kim.cressman@msstate.edu", href = "mailto:kim.cressman@msstate.edu"), ".")
+              )
     ), # end About panel
 
     nav_spacer(),

@@ -5,7 +5,7 @@ account: cmep-ms
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 14633481
-bundleId: 10294595
+bundleId: 10364614
 url: https://cmep-ms.shinyapps.io/SalinityExplorer/
 version: 1
 asMultiple: FALSE
