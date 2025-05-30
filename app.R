@@ -90,44 +90,53 @@ ui <- page_navbar(
     # about panel
     nav_panel("About",
               card(
-                  card_header("About this app"),
+                  # card_header("About this app"),
                   p("This application allows users to explore salinity data in the Mississippi Sound."),
-                  p("Most pieces of this app are interactive."),
                   h4("Data sources and caveats:"),
                   tags$ol(
-                      tags$li(span(strong("USGS Salinity data"), "is downloaded from the USGS web API using the `dataRetrieval` R package."),
+                      tags$li(span(strong("USGS Salinity data"), "is downloaded from the USGS web API using the `mseptools` R package, which contains a wrapper function to the USGS `dataRetrieval` package. The `mseptools` function specifically downloads and processes salinity data only. The value type downloaded is 'Instantaneous' ('uv' in USGS API parlance). Daily means are calculated from these higher-frequency readings within the `mseptools` function."),
                               tags$ol(
                                   style = "list-style-type: lower-alpha; margin-top: 8px;",
-                                  tags$li(em(strong("Data preview:")), " some words"),
+                                  tags$li(em(strong("Data Quality:")), " Data may be provisional, especially if recent - it may not have undergone QA/QC processes. If a value seems anomalously low or high, especially compared to other values on that date, there may be an equipment malfunction."),
+                                  tags$li(em(strong("Data Quality:")), " Data may be provisional, especially if recent - it may not have undergone QA/QC processes. If a value seems anomalously low or high, especially compared to other values on that date, there may be an equipment malfunction."),
                                   tags$li(em(strong("Column summary:")), " some more words")
                               ))
                   ),
-                  h4("How to use this app:"),
+                  h4("Using this app:"),
                   tags$ol(
-                      tags$li(strong("Upload your vegetation data file"), "using the sidebar. This information will not be retained by the app once you close the session."),
                       tags$li(
-                          span(strong("See tabular summaries"), " of your data by selecting 'Tables' from the navigation bar at the top of the app."),
+                          span(strong("Sidebar: get data"), " and see a map of the stations."),
                           tags$ol(
                               style = "list-style-type: lower-alpha; margin-top: 8px;",
-                              tags$li(em(strong("Data preview:")), " some more words"),
-                              tags$li(em(strong("Column summary:")), " some more words"),
-                              tags$li(em(strong("Sampling summary:")), " some more words")
+                              tags$li(em(strong("Choose dates:")), " Use either the calendar interface or type the dates you wish to download."),
+                              tags$li(em(strong("Get data button:")), " Nothing happens in the app until you push this button to confirm the dates you'd like to use. Then the data for the specified dates are downloaded, along with station information. Some stations do not consistently report salinity, so may appear in some date range selections and not others."),
+                              tags$li(em(strong("Station map:")), " A map of the USGS stations appearing in the downloaded data appears below the date range selector. Stations are colored from west to east. Color/station combinations in this map match the color/station combinations in the time series graphs. Clicking a point on the map will show the full station name and USGS station number.")
                           )
                       ),
                       tags$li(
-                          span(strong("Explore graphs"), " of your data by selecting 'Graphs' from the navigation bar at the top of the app."),
+                          span(strong("Time Series Tab"), " "),
                           tags$ol(
                               style = "list-style-type: lower-alpha; margin-top: 8px;",
-                              tags$li(em(strong("Time series:")), " some more words"),
-                              tags$li(em(strong("Transect Profiles:")), " some more words"),
-                              tags$li(em(strong("Correlation Scatterplots:")), " some more words")
+                              tags$li(em(strong("General map functionality:")), " Click on a station in the legend to make it disappear or reappear. Double-click on a station and it will be the only one that appears. Hover over part of a graph and you will see the value and station of the nearest point. Click and drag horizontally, or over the slider below both graphs, to zoom in on a date range. When you hover over the graphs, a floating bar will appear with more options as well - pan, reset boundaries/zoom levels, even download the plot. Click around!"),
+                              tags$li(em(strong("All Readings:")), " these are the 'instantaneous values' in the downloaded dataset."),
+                              tags$li(em(strong("Daily Mean:")), " these values are daily means of the values in the above graph. Tidal variation is averaged out by compiling to daily values.")
+                          )
+                      ),
+                      tags$li(
+                          span(strong("Map Tab"), " "),
+                          tags$ol(
+                              style = "list-style-type: lower-alpha; margin-top: 8px;",
+                              tags$li(em(strong("Stations:")), " The points on this map represent the same stations that appear in the sidebar station map."),
+                              tags$li(em(strong("Point color:")), " Points are colored by salinity value, representing the mean salinity at the station on the selected date (see 'Date selection and animation' section). Lower salinity values are yellow to light-green, and darker greens to blues represent higher salinity values."),
+                              tags$li(em(strong("Date selection and animation:")), " The slider above the map can be used to select a specific date, or the 'play' button below the slider can be pressed to start an animation of the days sequentially. This animation can be paused. The date in blue above the slider bar is the date represented on the map."),
+                              tags$li(em(strong("Clicking on a point:")), " When you click a point on the map, a pop-up appears with the daily mean salinity, followed by the short station name used in figure legends, and, finally, the USGS site ID number.")
                           )
                       )
-
                   ),
+
                   hr(),
-                  p("This app was developed in support of the Mississippi Sound Estuary Program (MSEP). Please see ", tags$a("our website", href = "https://msucoastal.com/mssoundep/", target = "_blank"), " for more information."),
-                  p("For questions about this app, please contact ", tags$a("kim.cressman@msstate.edu", href = "mailto:kim.cressman@msstate.edu"), ".")
+                  p("This app was developed by the Mississippi Sound Estuary Program (MSEP). Please see ", tags$a("our website", href = "https://msucoastal.com/mssoundep/", target = "_blank"), " for more information."),
+                  tags$small("For questions about this app, please contact ", tags$a("kim.cressman@msstate.edu", href = "mailto:kim.cressman@msstate.edu"), ".")
               )
     ), # end About panel
 
