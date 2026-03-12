@@ -10,6 +10,7 @@ library(leaflet)
 # https://github.com/CMEP-MS/msep_SalinityApp
 
 ui <- page_navbar(
+    tags$head(includeHTML("google-analytics.html")),
 
     title = "Mississippi Sound Salinity Explorer",
     theme = bs_theme(version = 5),
